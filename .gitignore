@@ -1,0 +1,16 @@
+node_modules
+dist
+.env
+coverage
+*.log
+prisma/dev.db
+/tools/
+.audit*/
+.review*/
+.ppt-audit/
+
+.DS_Store
+*.tsbuildinfo
+.idea/
+.vscode/
+*.local
