@@ -1,29 +1,28 @@
 {
-  "name": "madeforai-supplychain-skill",
-  "version": "0.4.0",
-  "description": "A minimal MCP server for structuring small-batch manufacturing tasks for human Reality Operators.",
+  "name": "madeforai-supplychain-connector",
+  "version": "0.5.0",
+  "description": "Official open-source MCP connector for the MadeForAI hosted reality supply chain service.",
   "type": "module",
   "main": "dist/src/index.js",
+  "bin": {
+    "madeforai-supplychain": "dist/src/index.js"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "README.zh-CN.md",
+    "CHANGELOG.md",
+    "ROADMAP.md",
+    "LICENSE",
+    "SECURITY.md"
+  ],
   "scripts": {
-    "dev": "tsx watch src/index.ts",
+    "build": "tsc",
     "start": "node dist/src/index.js",
-    "start:stdio": "node dist/src/index.js --stdio",
-    "start:http": "node dist/src/index.js --http",
-    "build": "prisma generate && tsc",
-    "test": "vitest run --dir tests",
+    "prepack": "npm run build",
+    "test": "vitest run",
     "lint": "eslint .",
-    "format": "prettier --write .",
-    "smoke:http": "node scripts/smoke-test-http.mjs",
-    "demo": "node bin/cli.mjs",
-    "postgres:start": "powershell.exe -ExecutionPolicy Bypass -File scripts/start-postgres.ps1",
-    "postgres:stop": "powershell.exe -ExecutionPolicy Bypass -File scripts/stop-postgres.ps1",
-    "postgres:ensure-db": "powershell.exe -ExecutionPolicy Bypass -File scripts/ensure-database.ps1",
-    "start:http:postgres": "powershell.exe -ExecutionPolicy Bypass -File scripts/start-http-postgres.ps1",
-    "verify:persistent": "powershell.exe -ExecutionPolicy Bypass -File scripts/verify-persistent.ps1",
-    "prisma:generate": "prisma generate",
-    "prisma:migrate": "prisma migrate dev",
-    "prisma:migrate:deploy": "prisma migrate deploy",
-    "smoke:remote": "node scripts/smoke-test-http.mjs"
+    "format": "prettier --write ."
   },
   "keywords": [
     "mcp",
@@ -33,40 +32,19 @@
     "madeforai"
   ],
   "license": "MIT",
-  "bin": {
-    "madeforai-skill": "bin/cli.mjs"
-  },
-  "files": [
-    "dist",
-    "bin",
-    "prisma",
-    "docs",
-    "README.md",
-    "README.zh-CN.md",
-    "LICENSE",
-    "PRODUCT_SPEC.md",
-    "ROADMAP.md"
-  ],
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.18.0",
-    "@prisma/client": "^6.15.0",
-    "cors": "^2.8.5",
-    "dotenv": "^16.4.7",
-    "express": "^4.21.2",
-    "nanoid": "^5.1.5",
-    "zod": "^3.25.76"
+    "@modelcontextprotocol/sdk": "^1.18.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.35.0",
-    "@types/cors": "^2.8.19",
-    "@types/express": "^4.17.23",
     "@types/node": "^22.15.30",
     "eslint": "^9.35.0",
     "prettier": "^3.6.2",
-    "prisma": "^6.15.0",
-    "tsx": "^4.20.5",
     "typescript": "^5.9.2",
     "typescript-eslint": "^8.43.0",
     "vitest": "^3.2.4"
+  },
+  "engines": {
+    "node": ">=20.19.0"
   }
 }

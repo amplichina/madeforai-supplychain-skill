@@ -1,13 +1,5 @@
-node_modules
-dist
+node_modules/
+dist/
+coverage/
 .env
-coverage
 *.log
-__pycache__/
-*.py[cod]
-prisma/dev.db
-/tools/
-.audit*/
-.review*/
-.ppt-audit/
-.secrets/

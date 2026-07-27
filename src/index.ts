@@ -1,31 +1,67 @@
-import "dotenv/config";
-import { createInMemorySupplyChainStore } from "./db/inMemoryStore.js";
-import { startHttpServer, startStdioServer } from "./mcp/server.js";
-import { createPrismaSupplyChainStore } from "./tools/index.js";
+#!/usr/bin/env node
 
-function getTransportMode(argv: string[]): "stdio" | "http" {
-  if (argv.includes("--http")) return "http";
-  if (argv.includes("--stdio")) return "stdio";
-  return process.env.MCP_TRANSPORT === "http" ? "http" : "stdio";
-}
+import { Client } from "@modelcontextprotocol/sdk/client/index.js";
+import { StreamableHTTPClientTransport } from "@modelcontextprotocol/sdk/client/streamableHttp.js";
+import { Server } from "@modelcontextprotocol/sdk/server/index.js";
+import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
+import {
+  CallToolRequestSchema,
+  ListToolsRequestSchema,
+} from "@modelcontextprotocol/sdk/types.js";
+import { resolveConnectorConfig } from "./config.js";
+import { assertPublicToolName, isPublicToolName } from "./publicTools.js";
 
 async function main(): Promise<void> {
-  const store =
-    process.env.MCP_DEV_MEMORY_STORE === "true"
-      ? createInMemorySupplyChainStore()
-      : createPrismaSupplyChainStore((await import("./db/prisma.js")).prisma);
-  const mode = getTransportMode(process.argv);
+  const config = resolveConnectorConfig();
+  const remoteClient = new Client(
+    { name: "madeforai-official-connector", version: "0.5.0" },
+    { capabilities: {} },
+  );
+  const remoteTransport = new StreamableHTTPClientTransport(new URL(config.endpoint), {
+    requestInit: {
+      headers: {
+        authorization: `Bearer ${config.accessToken}`,
+        "x-madeforai-connector": "official-v0.5.0",
+      },
+    },
+  });
 
-  if (mode === "http") {
-    const port = Number.parseInt(process.env.PORT ?? "3000", 10);
-    await startHttpServer(store, port);
-    return;
-  }
+  await remoteClient.connect(remoteTransport);
 
-  await startStdioServer(store);
+  const localServer = new Server(
+    { name: "madeforai-supplychain-connector", version: "0.5.0" },
+    {
+      capabilities: { tools: {} },
+      instructions:
+        "Official MadeForAI connector. Real tasks are routed to the MadeForAI hosted control plane and remain human-approved.",
+    },
+  );
+
+  localServer.setRequestHandler(ListToolsRequestSchema, async () => {
+    const result = await remoteClient.listTools();
+    return {
+      ...result,
+      tools: result.tools.filter((tool) => isPublicToolName(tool.name)),
+    };
+  });
+
+  localServer.setRequestHandler(CallToolRequestSchema, async (request) => {
+    assertPublicToolName(request.params.name);
+    return remoteClient.callTool(request.params);
+  });
+
+  const close = async () => {
+    await localServer.close();
+    await remoteClient.close();
+  };
+  process.once("SIGINT", () => void close().finally(() => process.exit(0)));
+  process.once("SIGTERM", () => void close().finally(() => process.exit(0)));
+
+  await localServer.connect(new StdioServerTransport());
+  console.error("MadeForAI official connector is routing tasks to api.madeforai.net.");
 }
 
 main().catch((error) => {
-  console.error(error);
+  console.error(error instanceof Error ? error.message : "MadeForAI connector failed.");
   process.exit(1);
 });
