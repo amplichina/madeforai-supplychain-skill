@@ -15,6 +15,7 @@ import {
   updateProductionStatus,
   type SupplyChainStore,
 } from "../tools/index.js";
+import { competitionPocHtml } from "./competitionPoc.js";
 
 function asyncHandler(
   handler: (req: Request, res: Response) => Promise<void>,
@@ -326,6 +327,10 @@ export function registerDemoRoutes(app: Express, store: SupplyChainStore): void 
 
   app.get("/demo", (_req, res) => {
     res.type("html").send(demoHtml());
+  });
+
+  app.get("/poc", (_req, res) => {
+    res.type("html").send(competitionPocHtml());
   });
 
   app.post(

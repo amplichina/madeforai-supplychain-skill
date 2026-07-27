@@ -2,9 +2,13 @@
 
 Guiding rule: protocols are earned by real adoption, not declared in advance.
 
-## Now: v0.3.x
+## Now: v0.4.x hosted closed alpha
 
 - Sixteen MCP tools with bilingual AI guidance and explicit pause semantics.
+- One centrally operated HTTPS MCP endpoint backed by persistent PostgreSQL.
+- Protected Chinese operator workspace for all invited alpha tasks.
+- Database readiness checks, production migrations, and remote smoke validation.
+- Private bearer-key access while tenant accounts and per-client credentials are still pending.
 - A safe pre-confirmation macro for fast evaluation.
 - Category sanity heuristics that ask questions but never reject valid tasks.
 - Nine phase-1 categories covering corporate identity applications and high-frequency custom goods.

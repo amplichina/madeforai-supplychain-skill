@@ -11,7 +11,12 @@ import { registerAcceptanceRoutes } from "../acceptance/routes.js";
 import { createOperatorAuthFromEnvironment } from "../operator/auth.js";
 import { createMcpHttpAuthFromEnvironment } from "./httpAuth.js";
 
-export const PROTECTED_DEMO_ROUTE_PREFIXES: string[] = ["/demo", "/user", "/acceptance"];
+export const PROTECTED_DEMO_ROUTE_PREFIXES: string[] = [
+  "/demo",
+  "/poc",
+  "/user",
+  "/acceptance",
+];
 
 export function parseCorsOrigins(value: string | undefined): string[] | false {
   if (!value?.trim()) return false;
@@ -54,7 +59,7 @@ export function parseCorsOrigins(value: string | undefined): string[] | false {
 export function createMadeForAiMcpServer(store: SupplyChainStore): McpServer {
   const server = new McpServer({
     name: "madeforai-supplychain-skill",
-    version: "0.3.0",
+    version: "0.4.0",
   });
 
   registerSupplyChainTools(server, store);
@@ -75,12 +80,41 @@ export function shouldEnableDemoRoutes(env: NodeJS.ProcessEnv): boolean {
 
 export function createHttpApp(store: SupplyChainStore): express.Express {
   const app = express();
+  app.disable("x-powered-by");
   if (process.env.TRUST_PROXY === "true") app.set("trust proxy", 1);
   app.use(cors({ origin: parseCorsOrigins(process.env.CORS_ORIGIN) }));
   app.use(express.json({ limit: "1mb" }));
+  app.use((_req, res, next) => {
+    res.setHeader("X-Content-Type-Options", "nosniff");
+    res.setHeader("X-Frame-Options", "SAMEORIGIN");
+    res.setHeader("Referrer-Policy", "no-referrer");
+    next();
+  });
+
+  app.get("/", (_req, res) => {
+    res.json({
+      service: "MadeForAI Hosted Order Intake",
+      version: "0.4.0",
+      status: "online",
+      mcp_endpoint: "/mcp",
+      operator_console: "/operator",
+      safety:
+        "Human approval is required. No automatic ordering or real payment processing is enabled.",
+    });
+  });
 
   app.get("/health", (_req, res) => {
     res.json({ ok: true });
+  });
+
+  app.get("/ready", async (_req, res) => {
+    try {
+      await store.healthCheck?.();
+      res.json({ ok: true, database: "ready" });
+    } catch (error) {
+      console.error("Database readiness check failed.", error);
+      res.status(503).json({ ok: false, database: "unavailable" });
+    }
   });
 
   const operatorAuth = createOperatorAuthFromEnvironment();
@@ -112,8 +146,15 @@ export function createHttpApp(store: SupplyChainStore): express.Express {
       void server.close();
     });
 
-    await server.connect(transport);
-    await transport.handleRequest(req, res, req.body);
+    try {
+      await server.connect(transport);
+      await transport.handleRequest(req, res, req.body);
+    } catch (error) {
+      console.error("MCP request failed.", error);
+      if (!res.headersSent) {
+        res.status(500).json({ error: "MCP request failed." });
+      }
+    }
   });
 
   app.get("/mcp", mcpHttpAuth.requireAuth, (_req, res) => {

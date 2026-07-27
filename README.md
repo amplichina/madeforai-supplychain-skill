@@ -2,11 +2,11 @@
 
 [中文说明](./README.zh-CN.md)
 
-MadeForAI is an interface layer between AI agents and China-based reality supply chain execution. Version 0.3.4 turns an AI agent's small-batch manufacturing request into a structured Reality Supply Chain Task that a human Reality Operator can execute.
+MadeForAI is an interface layer between AI agents and China-based reality supply chain execution. Version 0.4.0 adds a hosted order-intake deployment path so invited AI clients can submit tasks to one centrally operated MCP endpoint and database.
 
 **Give AI agents hands in the real world, with humans holding every irreversible gate.**
 
-In the first stage, a human Reality Operator may review a task, contact suppliers or wholesale market operators, confirm processes, request quotes, check samples, upload photos or videos, and return execution results to the AI agent.
+In the first stage, a human Reality Operator may review a task, contact suppliers or Yiwu market operators, confirm processes, request quotes, check samples, upload photos or videos, and return execution results to the AI agent.
 
 ## Why This Exists
 
@@ -55,6 +55,7 @@ For a 60-second local evaluation with no database:
 
 ```bash
 npm install
+npm run build
 npm run demo
 ```
 
@@ -141,6 +142,14 @@ http://localhost:3000/acceptance
 
 This page requires the same operator login as `/operator`. After login, it runs the complete AI-side and production-side workflow with one button and reports pass/fail in Chinese.
 
+Competition POC:
+
+```text
+http://localhost:3000/poc
+```
+
+This protected, auto-playing 58-second view is designed for product competition demos. It calls the real local user workflow and displays the resulting task ID, operator-confirmed quote, quality-check status, tracking number, and completion state. Use the replay control in the top-right corner to restart it. To record the page after starting the local server, set `OPERATOR_PASSWORD` and run `npm run render:poc`.
+
 For non-technical local acceptance testing, see `docs/LOCAL_VALIDATION.zh-CN.md`.
 
 Build and test:
@@ -150,7 +159,15 @@ npm run build
 npm test
 ```
 
-The current release includes 16 MCP tools, a 16-step approval-first workflow, nine phase-1 manufacturing categories, and 48 focused automated tests, including route-level end-to-end coverage. Payment links are bound to an accepted quote version, amounts cannot exist without an explicit currency, evidence-bearing states require dedicated business tools, quality check is required before shipment, and shipment is required before completion.
+The current release includes 16 MCP tools, a 16-step approval-first workflow, nine phase-1 manufacturing categories, and focused automated tests, including route-level end-to-end coverage. Payment links are bound to an accepted quote version, amounts cannot exist without an explicit currency, evidence-bearing states require dedicated business tools, quality check is required before shipment, and shipment is required before completion.
+
+## Hosted closed alpha
+
+The open-source stdio server stores tasks in the database configured by the person running it. To route invited real tasks to the MadeForAI production team, deploy one centrally operated HTTP service and configure AI clients to use its authenticated `/mcp` endpoint. The same service exposes the protected Chinese operator workspace at `/operator`.
+
+Version 0.4.0 is intentionally a closed alpha: remote MCP access uses a private bearer key, the operator workspace has separate credentials, and demo routes are disabled in production. Do not publish the bearer key in source code, screenshots, or public MCP configuration examples.
+
+See `docs/HOSTED_DEPLOYMENT.zh-CN.md` for the Cloud Run and PostgreSQL deployment runbook.
 
 For a no-database local MCP smoke test, set `MCP_DEV_MEMORY_STORE=true`, start the HTTP server, then run:
 
@@ -313,25 +330,11 @@ Submit production-side feedback:
   "task_id": "task_xxxxxxxxxxxxxxxxxx",
   "feasible": true,
   "confirmed_process": "hard enamel with gold electroplating",
-  "quote": "6.80 CNY/unit x 200",
-  "total_amount": "1360.00",
-  "currency": "CNY",
+  "quote": "Manual confirmation required: supplier quote received",
   "sample_cost": "Manual confirmation required",
   "estimated_production_time": "12-15 days after sample approval",
   "estimated_shipping_time": "5-8 days",
   "risks": ["Color matching requires sample approval"]
-}
-```
-
-Confirm the operator quote and risks (human gate 2):
-
-```json
-{
-  "task_id": "task_xxxxxxxxxxxxxxxxxx",
-  "accepted": true,
-  "accepted_quote_id": "quote_xxxxxxxxxxxxxxxxxx",
-  "accepted_risks": true,
-  "message": "User accepted the quote and the stated risks."
 }
 ```
 
@@ -340,12 +343,11 @@ Create a mock payment link:
 ```json
 {
   "task_id": "task_xxxxxxxxxxxxxxxxxx",
-  "accepted_quote_id": "quote_xxxxxxxxxxxxxxxxxx",
-  "description": "Mock payment link for the accepted production quote"
+  "amount": "USD 199.00",
+  "currency": "USD",
+  "description": "Mock payment link for approved production quote"
 }
 ```
-
-The amount and currency are read from the accepted quote snapshot on the server. The caller cannot supply them. Submitting a different `accepted_quote_id` than the one the user accepted is rejected.
 
 Confirm mock payment:
 

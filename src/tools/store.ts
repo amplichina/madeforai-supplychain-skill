@@ -61,6 +61,7 @@ export type TaskWithRelations = StoredTask & {
 };
 
 export interface SupplyChainStore {
+  healthCheck?(): Promise<void>;
   createTask(input: {
     id: string;
     title: string;
@@ -124,6 +125,9 @@ export interface SupplyChainStore {
 
 export function createPrismaSupplyChainStore(prisma: any): SupplyChainStore {
   return {
+    healthCheck: async () => {
+      await prisma.$queryRawUnsafe("SELECT 1");
+    },
     createTask: (input) =>
       prisma.supplyChainTask.create({
         data: {

@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.4.0 - 2026-07-27
+
+- Added the hosted order-intake deployment profile for Google Cloud Run and Neon PostgreSQL.
+- Added `/ready` database readiness checks, root service metadata, security headers, and guarded HTTP MCP error handling.
+- Added a Chinese hosted-deployment runbook for `api.madeforai.net`, remote MCP clients, Secret Manager, and production validation.
+- Hardened the production container to run as a non-root user and added focused Cloud Build ignore rules.
+- Added a remote MCP smoke command and verified the complete approval-first order lifecycle against the hosted database.
+- Expanded route and security regression coverage; 49 tests now pass across 6 files.
+- Kept real payments and automatic supplier ordering out of scope; the hosted payment gate remains explicitly mocked.
+
 ## 0.3.4 - 2026-07-25
 
 - Audited the supplied v0.3.3 archive and confirmed its 75 source files are byte-for-byte equivalent to the current implementation.

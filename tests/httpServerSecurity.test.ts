@@ -56,7 +56,7 @@ describe("HTTP server security", () => {
     expect(shouldEnableDemoRoutes({ NODE_ENV: "production", ENABLE_DEMO_ROUTES: "true" })).toBe(
       false,
     );
-    expect(PROTECTED_DEMO_ROUTE_PREFIXES).toEqual(["/demo", "/user", "/acceptance"]);
+    expect(PROTECTED_DEMO_ROUTE_PREFIXES).toEqual(["/demo", "/poc", "/user", "/acceptance"]);
   });
 
   it("defaults CORS to disabled and validates explicit origins", () => {

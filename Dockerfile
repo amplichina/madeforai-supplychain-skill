@@ -19,4 +19,5 @@ COPY --from=build /app/prisma ./prisma
 # Prisma generates runtime code during the build stage. Keep it in the lean runtime image.
 COPY --from=build /app/node_modules/.prisma ./node_modules/.prisma
 COPY --from=build /app/node_modules/@prisma/client ./node_modules/@prisma/client
+USER node
 CMD ["node", "dist/src/index.js", "--http"]

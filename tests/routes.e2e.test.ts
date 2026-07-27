@@ -40,6 +40,20 @@ afterAll(async () => {
 });
 
 describe("web workflow routes", () => {
+  it("serves the protected 60-second competition POC", async () => {
+    const anonymous = await fetch(`${baseUrl}/poc`, { redirect: "manual" });
+    expect([301, 302, 303, 401, 403]).toContain(anonymous.status);
+
+    const authenticated = await fetch(`${baseUrl}/poc`, {
+      headers: { cookie: operatorCookie },
+    });
+    const html = await authenticated.text();
+    expect(authenticated.status).toBe(200);
+    expect(html).toContain("60 秒实机 POC");
+    expect(html).toContain('fetch("/user/api/run"');
+    expect(html).toContain("No automatic ordering");
+  });
+
   it("runs the protected demo through quality check and delivery", async () => {
     const response = await fetch(`${baseUrl}/demo/api/run`, {
       method: "POST",

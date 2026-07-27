@@ -1,16 +1,7 @@
 {
   "name": "madeforai-supplychain-skill",
-  "version": "0.3.4",
+  "version": "0.4.0",
   "description": "A minimal MCP server for structuring small-batch manufacturing tasks for human Reality Operators.",
-  "author": "Shanghai Ampli Culture & Technology Co., Ltd.",
-  "homepage": "https://github.com/amplichina/madeforai-supplychain-skill#readme",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/amplichina/madeforai-supplychain-skill.git"
-  },
-  "bugs": {
-    "url": "https://github.com/amplichina/madeforai-supplychain-skill/issues"
-  },
   "type": "module",
   "main": "dist/src/index.js",
   "scripts": {
@@ -30,7 +21,9 @@
     "start:http:postgres": "powershell.exe -ExecutionPolicy Bypass -File scripts/start-http-postgres.ps1",
     "verify:persistent": "powershell.exe -ExecutionPolicy Bypass -File scripts/verify-persistent.ps1",
     "prisma:generate": "prisma generate",
-    "prisma:migrate": "prisma migrate dev"
+    "prisma:migrate": "prisma migrate dev",
+    "prisma:migrate:deploy": "prisma migrate deploy",
+    "smoke:remote": "node scripts/smoke-test-http.mjs"
   },
   "keywords": [
     "mcp",
