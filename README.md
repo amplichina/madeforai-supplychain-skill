@@ -75,4 +75,4 @@ MadeForAI does not generate images, run LLM inference, process real payments, or
 
 ## License
 
-The connector is MIT licensed. The hosted MadeForAI control plane, operator workspace, production operations, credentials, databases, and supplier network are separate proprietary services.
+The connector is MIT licensed. The hosted MadeForAI control plane, operator workspace, production operations, credentials, databases, and supplier records are separate proprietary services.
