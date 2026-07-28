@@ -1,5 +1,64 @@
 {
   "name": "madeforai-supplychain-connector",
+  "version": "0.5.1",
+  "description": "Open-source MCP connector for MadeForAI hosted supply chain task intake.",
+  "type": "module",
+  "main": "dist/src/index.js",
+  "bin": {
+    "madeforai-supplychain": "dist/src/index.js"
+  },
+  "files": [
+    "dist/src",
+    "README.md",
+    "README.zh-CN.md",
+    "CHANGELOG.md",
+    "ROADMAP.md",
+    "LICENSE",
+    "SECURITY.md"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/src/index.js",
+    "prepack": "npm run build",
+    "test": "vitest run",
+    "lint": "eslint .",
+    "format": "prettier --write ."
+  },
+  "keywords": [
+    "mcp",
+    "supply-chain",
+    "manufacturing",
+    "ai-skill",
+    "madeforai"
+  ],
+  "license": "MIT",
+  "author": "MadeForAI",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/amplichina/madeforai-supplychain-skill.git"
+  },
+  "homepage": "https://github.com/amplichina/madeforai-supplychain-skill#readme",
+  "bugs": {
+    "url": "https://github.com/amplichina/madeforai-supplychain-skill/issues"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "~1.29.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.35.0",
+    "@types/node": "^22.15.30",
+    "eslint": "^9.35.0",
+    "prettier": "^3.6.2",
+    "typescript": "^5.9.2",
+    "typescript-eslint": "^8.43.0",
+    "vitest": "^3.2.4"
+  },
+  "engines": {
+    "node": ">=20.19.0"
+  }
+}
+{
+  "name": "madeforai-supplychain-connector",
   "version": "0.5.0",
   "description": "Official open-source MCP connector for the MadeForAI hosted reality supply chain service.",
   "type": "module",
