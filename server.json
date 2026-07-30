@@ -1,0 +1,29 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.amplichina/madeforai-supplychain-skill",
+  "description": "MCP connector for human-reviewed manufacturing tasks through MadeForAI hosted fulfillment.",
+  "repository": {
+    "url": "https://github.com/amplichina/madeforai-supplychain-skill",
+    "source": "github"
+  },
+  "version": "0.5.2",
+  "packages": [
+    {
+      "registryType": "npm",
+      "identifier": "madeforai-supplychain-connector",
+      "version": "0.5.2",
+      "transport": {
+        "type": "stdio"
+      },
+      "environmentVariables": [
+        {
+          "description": "MadeForAI client access token. Request a token from MadeForAI and keep it secret.",
+          "isRequired": true,
+          "format": "string",
+          "isSecret": true,
+          "name": "MADEFORAI_ACCESS_TOKEN"
+        }
+      ]
+    }
+  ]
+}

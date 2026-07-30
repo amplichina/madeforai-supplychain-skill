@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.5.2 - 2026-07-30
+
+- Added the MCP Registry ownership marker through `package.json#mcpName` and the matching README marker.
+- Added a package-name command alias so `npx madeforai-supplychain-connector` resolves directly.
+- Added `server.json` metadata for the official MCP Registry.
+- Replaced manual `.tgz` installation as the primary path with a one-line npx command.
+- Reduced the npm `files` whitelist to compiled runtime files; npm still includes required package metadata, README, and license files.
+
 ## 0.5.1 - 2026-07-28
 
 - Removed compiled connector tests from the release package by limiting npm files to `dist/src`.

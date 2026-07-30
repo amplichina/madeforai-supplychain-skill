@@ -14,14 +14,14 @@ import { assertPublicToolName, isPublicToolName } from "./publicTools.js";
 async function main(): Promise<void> {
   const config = resolveConnectorConfig();
   const remoteClient = new Client(
-    { name: "madeforai-hosted-connector", version: "0.5.1" },
+    { name: "madeforai-hosted-connector", version: "0.5.2" },
     { capabilities: {} },
   );
   const remoteTransport = new StreamableHTTPClientTransport(new URL(config.endpoint), {
     requestInit: {
       headers: {
         authorization: `Bearer ${config.accessToken}`,
-        "x-madeforai-connector": "hosted-v0.5.1",
+        "x-madeforai-connector": "hosted-v0.5.2",
       },
     },
   });
@@ -29,7 +29,7 @@ async function main(): Promise<void> {
   await remoteClient.connect(remoteTransport);
 
   const localServer = new Server(
-    { name: "madeforai-supplychain-connector", version: "0.5.1" },
+    { name: "madeforai-supplychain-connector", version: "0.5.2" },
     {
       capabilities: { tools: {} },
       instructions:

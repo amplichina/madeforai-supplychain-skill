@@ -1,20 +1,16 @@
 {
   "name": "madeforai-supplychain-connector",
-  "version": "0.5.1",
+  "version": "0.5.2",
+  "mcpName": "io.github.amplichina/madeforai-supplychain-skill",
   "description": "Open-source MCP connector for MadeForAI hosted supply chain task intake.",
   "type": "module",
   "main": "dist/src/index.js",
   "bin": {
+    "madeforai-supplychain-connector": "dist/src/index.js",
     "madeforai-supplychain": "dist/src/index.js"
   },
   "files": [
-    "dist/src",
-    "README.md",
-    "README.zh-CN.md",
-    "CHANGELOG.md",
-    "ROADMAP.md",
-    "LICENSE",
-    "SECURITY.md"
+    "dist/src"
   ],
   "scripts": {
     "build": "tsc",
@@ -40,6 +36,10 @@
   "homepage": "https://github.com/amplichina/madeforai-supplychain-skill#readme",
   "bugs": {
     "url": "https://github.com/amplichina/madeforai-supplychain-skill/issues"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "~1.29.0"

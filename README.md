@@ -1,3 +1,5 @@
+<!-- mcp-name: io.github.amplichina/madeforai-supplychain-skill -->
+
 # MadeForAI Hosted Supply Chain Connector
 
 This open-source MCP connector forwards authorized manufacturing task requests from Codex, Claude, Gemini, Cursor, and other MCP clients to the MadeForAI hosted order-intake service.
@@ -8,16 +10,40 @@ The connector contains only stdio transport, the nine public tool names, and a f
 
 It does **not** contain the order database, Chinese production workspace, production credentials, supplier records, payment-confirmation authority, shipment authority, or fulfillment administration. Forks remain usable under MIT, but they do not gain access to MadeForAI-hosted tasks or private production systems.
 
-## Install a release package
+## Run with npx
 
-Download `madeforai-supplychain-connector-0.5.1.tgz` from the matching GitHub Release, then install it:
+Set your MadeForAI client access token, then run the connector directly from npm:
 
 ```bash
-npm install --global ./madeforai-supplychain-connector-0.5.1.tgz
-madeforai-supplychain
+npx --yes madeforai-supplychain-connector@0.5.2
+```
+
+For MCP clients, use `npx` as the command:
+
+```json
+{
+  "mcpServers": {
+    "madeforai": {
+      "command": "npx",
+      "args": ["--yes", "madeforai-supplychain-connector@0.5.2"],
+      "env": {
+        "MADEFORAI_ACCESS_TOKEN": "replace-with-your-32-character-or-longer-token"
+      }
+    }
+  }
+}
 ```
 
 The command exits with a clear error until `MADEFORAI_ACCESS_TOKEN` is set. Tokens must contain at least 32 characters.
+
+## Manual installation
+
+As a fallback, download `madeforai-supplychain-connector-0.5.2.tgz` from the matching GitHub Release, then install it:
+
+```bash
+npm install --global ./madeforai-supplychain-connector-0.5.2.tgz
+madeforai-supplychain
+```
 
 ## Build from source
 
@@ -33,13 +59,14 @@ npm test
 
 Request a client access token from MadeForAI. Keep it out of source code, screenshots, issue reports, and public examples.
 
-For a globally installed release package:
+For an npx-based installation:
 
 ```json
 {
   "mcpServers": {
     "madeforai": {
-      "command": "madeforai-supplychain",
+      "command": "npx",
+      "args": ["--yes", "madeforai-supplychain-connector@0.5.2"],
       "env": {
         "MADEFORAI_ACCESS_TOKEN": "replace-with-your-32-character-or-longer-token"
       }

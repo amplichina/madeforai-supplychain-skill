@@ -1,3 +1,5 @@
+<!-- mcp-name: io.github.amplichina/madeforai-supplychain-skill -->
+
 # MadeForAI 托管供应链连接器
 
 这是 MadeForAI 的开源 MCP 连接器，用于把 Codex、Claude、Gemini、Cursor 等 AI 客户端提交的制造任务转发到 MadeForAI 托管订单入口。
@@ -8,16 +10,40 @@
 
 它不包含订单数据库、中文生产后台、生产端账号、供应商资料、付款确认权限、质检物流权限或履约管理逻辑。第三方可以按 MIT 协议修改连接器，但不会因此获得 MadeForAI 托管任务或私有生产系统的访问权。
 
-## 安装 Release 安装包
+## 使用 npx 运行
 
-从对应的 GitHub Release 下载 `madeforai-supplychain-connector-0.5.1.tgz`，然后执行：
+设置 MadeForAI 客户端访问令牌后，可以直接从 npm 启动：
 
 ```bash
-npm install --global ./madeforai-supplychain-connector-0.5.1.tgz
-madeforai-supplychain
+npx --yes madeforai-supplychain-connector@0.5.2
+```
+
+MCP 客户端配置：
+
+```json
+{
+  "mcpServers": {
+    "madeforai": {
+      "command": "npx",
+      "args": ["--yes", "madeforai-supplychain-connector@0.5.2"],
+      "env": {
+        "MADEFORAI_ACCESS_TOKEN": "替换为长度不少于32字符的客户端令牌"
+      }
+    }
+  }
+}
 ```
 
 未设置 `MADEFORAI_ACCESS_TOKEN` 时命令会明确报错。访问令牌不得少于 32 个字符。
+
+## 手动安装
+
+作为备用方式，可以从对应的 GitHub Release 下载 `madeforai-supplychain-connector-0.5.2.tgz`，然后执行：
+
+```bash
+npm install --global ./madeforai-supplychain-connector-0.5.2.tgz
+madeforai-supplychain
+```
 
 ## 从源码构建
 
@@ -37,7 +63,8 @@ npm test
 {
   "mcpServers": {
     "madeforai": {
-      "command": "madeforai-supplychain",
+      "command": "npx",
+      "args": ["--yes", "madeforai-supplychain-connector@0.5.2"],
       "env": {
         "MADEFORAI_ACCESS_TOKEN": "替换为长度不少于32字符的客户端令牌"
       }
